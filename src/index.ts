@@ -1,8 +1,8 @@
 import express from 'express';
+import path from 'path';
 
-let frontend = express();
-let path = require('path');
-let port = 4000;
+const frontend = express();
+const port = 4000;
 
 frontend.use(
   '/assets',
