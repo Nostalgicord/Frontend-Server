@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/Nostalgicord/Frontend-Server/compare/v0.0.2...v0.0.3) (2021-11-02)
+
+
+### Features
+
+* SSL Support ([fd13a05](https://github.com/Nostalgicord/Frontend-Server/commit/fd13a056a6079678214e9598a9a1c138c7b0a455))
+
+
+### Bug Fixes
+
+* unremove .vscode directory ([78f4687](https://github.com/Nostalgicord/Frontend-Server/commit/78f468792ed575a0416a31ee84a81901fec6ab4f))
+
 ### [0.0.2](https://github.com/Nostalgicord/Frontend-Server/compare/v0.0.1...v0.0.2) (2021-11-01)
 
 
