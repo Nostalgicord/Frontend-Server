@@ -1,18 +1,38 @@
-import express from 'express';
 import path from 'path';
+import forge from 'node-forge';
+import fs from 'fs';
+import createCert from '@/createSsl';
+import createServer from '@/createServer';
 
-const frontend = express();
-const port = 4000;
+// TODO: check if it is local or remote to prevent issues
+// create a ssl
 
-frontend.use(
-  '/assets',
-  express.static(path.join(__dirname, '..', 'build', 'assets')),
+try {
+  fs.existsSync(path.join(__dirname, '..', 'ssl'));
+  if (
+    forge.pki.certificateFromPem(
+      fs
+        .readFileSync(path.join(__dirname, '..', 'ssl', 'caCert.pem'), 'utf8')
+        .toString(),
+    ).validity.notAfter.getTime > new Date().getTime
+  ) {
+    console.info('[SSL] The SSL certificate is expired, recreating...');
+    fs.rmdirSync(path.join(__dirname, '..', 'ssl'));
+    createCert(path.join(__dirname, '..', 'ssl'));
+  }
+} catch (err) {
+  console.error(
+    `[SSL] Either folder doesn't exist or SSL is corrupted. (${err})`,
+  );
+  if (fs.existsSync(path.join(__dirname, '..', 'ssl'))) {
+    fs.rmdirSync(path.join(__dirname, '..', 'ssl'));
+  }
+  createCert(path.join(__dirname, '..', 'ssl'));
+}
+
+// create server
+
+createServer(
+  path.join(__dirname, '..', 'build'),
+  path.join(__dirname, '..', 'ssl'),
 );
-
-frontend.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
-});
-
-frontend.listen(port, () => {
-  console.log(`[Server] Successfully starts at http://localhost:${port}`);
-});
