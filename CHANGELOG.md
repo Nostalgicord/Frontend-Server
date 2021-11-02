@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/Nostalgicord/Frontend-Server/compare/v0.0.4...v0.0.5) (2021-11-02)
+
+
+### Features
+
+* Config file ([8e8e5ca](https://github.com/Nostalgicord/Frontend-Server/commit/8e8e5ca30a48d4af6cb74548c18ca956d66a45ec))
+
 ### [0.0.4](https://github.com/Nostalgicord/Frontend-Server/compare/v0.0.2...v0.0.4) (2021-11-02)
 
 
