@@ -3,36 +3,37 @@ import forge from 'node-forge';
 import fs from 'fs';
 import createCert from '@/createSsl';
 import createServer from '@/createServer';
+import YAML from 'yaml';
 
-// TODO: check if it is local or remote to prevent issues
-// create a ssl
+const rootPath = path.join(__dirname, '..');
 
-try {
-  fs.existsSync(path.join(__dirname, '..', 'ssl'));
-  if (
-    forge.pki.certificateFromPem(
-      fs
-        .readFileSync(path.join(__dirname, '..', 'ssl', 'caCert.pem'), 'utf8')
-        .toString(),
-    ).validity.notAfter.getTime > new Date().getTime
-  ) {
-    console.info('[SSL] The SSL certificate is expired, recreating...');
-    fs.rmdirSync(path.join(__dirname, '..', 'ssl'));
-    createCert(path.join(__dirname, '..', 'ssl'));
+const config = YAML.parse(
+  fs.readFileSync(path.join(rootPath, 'config.yaml')).toString(),
+);
+
+if (config['environment'] == 'local') {
+  try {
+    fs.existsSync(path.join(rootPath, 'ssl'));
+    if (
+      forge.pki.certificateFromPem(
+        fs
+          .readFileSync(path.join(rootPath, 'ssl', 'caCert.cer'), 'utf8')
+          .toString(),
+      ).validity.notAfter.getTime > new Date().getTime
+    ) {
+      console.info('[SSL] The SSL certificate is expired, recreating...');
+      fs.rmdirSync(path.join(rootPath, 'ssl'));
+      createCert(path.join(rootPath));
+    }
+  } catch (err) {
+    console.error(
+      `[SSL] Either folder doesn't exist or SSL is corrupted. (${err})`,
+    );
+    if (fs.existsSync(path.join(rootPath, 'ssl'))) {
+      fs.rmdirSync(path.join(rootPath, 'ssl'));
+    }
+    createCert(path.join(rootPath));
   }
-} catch (err) {
-  console.error(
-    `[SSL] Either folder doesn't exist or SSL is corrupted. (${err})`,
-  );
-  if (fs.existsSync(path.join(__dirname, '..', 'ssl'))) {
-    fs.rmdirSync(path.join(__dirname, '..', 'ssl'));
-  }
-  createCert(path.join(__dirname, '..', 'ssl'));
 }
 
-// create server
-
-createServer(
-  path.join(__dirname, '..', 'build'),
-  path.join(__dirname, '..', 'ssl'),
-);
+createServer(path.join(rootPath));

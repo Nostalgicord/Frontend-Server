@@ -1,10 +1,13 @@
 import forge from 'node-forge';
 import fs from 'fs';
 import path from 'path';
+import promptSync from 'prompt-sync';
 
-export default function createCert(sslPath: string): void {
+const prompt = promptSync({ sigint: true });
+
+export default function createCert(rootPath: string): void {
   try {
-    fs.mkdirSync(sslPath);
+    fs.mkdirSync(path.join(rootPath, 'ssl'));
     console.log('[Info] SSL folder Created.');
   } catch (err) {
     console.error(`[Error] SSL folder creation error: ${err}`);
@@ -103,7 +106,7 @@ export default function createCert(sslPath: string): void {
 
   try {
     fs.writeFileSync(
-      path.join(sslPath, 'caKey.key'),
+      path.join(rootPath, 'ssl', 'caKey.key'),
       forge.pki.privateKeyToPem(caKeys.privateKey),
     );
   } catch (err) {
@@ -112,7 +115,7 @@ export default function createCert(sslPath: string): void {
 
   try {
     fs.writeFileSync(
-      path.join(sslPath, 'caCert.pem'),
+      path.join(rootPath, 'ssl', 'caCert.cer'),
       forge.pki.certificateToPem(caCert),
     );
   } catch (err) {
@@ -148,10 +151,14 @@ export default function createCert(sslPath: string): void {
 
   try {
     fs.writeFileSync(
-      path.join(sslPath, 'cert.pem'),
+      path.join(rootPath, 'ssl', 'cert.cer'),
       forge.pki.certificateToPem(cert),
     );
   } catch (err) {
     console.log(`[Error]: Cert not saved: ${err}`);
   }
+
+  prompt(
+    "[Info] Please import caCert.cer to your computer's CA store, search on Google for help. Press enter after you imported it.",
+  );
 }

@@ -4,7 +4,7 @@ Simulate Discord's frontend server for local (use with Nostalgicord Client) or r
 
 ## Compiling and using
 
-Be sure that port 4000 is open.
+Be sure that port 4000 is open. (or change it in config.yaml)
 
 1. Compile, go to the root directory and run
 
