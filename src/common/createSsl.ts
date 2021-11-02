@@ -10,7 +10,7 @@ export default function createCert(sslPath: string): void {
     console.error(`[Error] SSL folder creation error: ${err}`);
   }
 
-  let caAttrs = [
+  const caAttrs = [
     {
       name: 'commonName',
       value: 'discordLocalCa',
@@ -37,7 +37,7 @@ export default function createCert(sslPath: string): void {
     },
   ];
 
-  let attrs = [
+  const attrs = [
     {
       name: 'commonName',
       value: 'discordLocal',
@@ -64,8 +64,8 @@ export default function createCert(sslPath: string): void {
     },
   ];
 
-  let caKeys = forge.pki.rsa.generateKeyPair(2048);
-  let caCert = forge.pki.createCertificate();
+  const caKeys = forge.pki.rsa.generateKeyPair(2048);
+  const caCert = forge.pki.createCertificate();
 
   caCert.publicKey = caKeys.publicKey;
   caCert.serialNumber = '01';
@@ -119,7 +119,7 @@ export default function createCert(sslPath: string): void {
     console.log(`[Error]: CA not saved: ${err}`);
   }
 
-  let cert = forge.pki.createCertificate();
+  const cert = forge.pki.createCertificate();
   cert.publicKey = caCert.publicKey;
   cert.validity.notBefore = new Date();
   cert.validity.notAfter = new Date();
