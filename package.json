@@ -5,7 +5,7 @@
   "homepage": "https://nostalgicord.featyre.xyz",
   "author": "Nostalgicord",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "node": ">=13.2.0"
   },
