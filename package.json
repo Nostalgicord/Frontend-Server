@@ -22,7 +22,7 @@
     "build-live": "tsc -w && tsc-alias -w",
     "start": "node dist/index.js"
   },
-  "license": "MIT",
+  "license": "GPL",
   "devDependencies": {
     "@types/chai": "^4.2.18",
     "@types/cors": "^2.8.12",
