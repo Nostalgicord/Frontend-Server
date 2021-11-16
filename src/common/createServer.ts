@@ -1,5 +1,6 @@
 import express from 'express';
 import https from 'https';
+import http from 'http';
 import path from 'path';
 import fs from 'fs';
 import YAML from 'yaml';
@@ -12,7 +13,7 @@ export default function createServer(rootPath: string): void {
   const frontend = express();
   const port = config['port'];
 
-  const server = https.createServer(
+  const serverHTTPS = https.createServer(
     {
       key: fs.readFileSync(path.join(rootPath, 'ssl', 'caKey.key'), 'utf8'),
       cert: fs.readFileSync(path.join(rootPath, 'ssl', 'cert.cer'), 'utf8'),
@@ -20,8 +21,16 @@ export default function createServer(rootPath: string): void {
     frontend,
   );
 
-  server.listen(port, () => {
-    console.log(`[Server] Successfully starts at https://localhost:${port}`);
+  const serverHTTP = http.createServer(frontend);
+
+  serverHTTP.listen(port, () => {
+    console.log(`[Server] Successfully starts at http://localhost:${port}`);
+  });
+
+  serverHTTPS.listen(port + 1, () => {
+    console.log(
+      `[Server] Successfully starts at https://localhost:${port + 1}`,
+    );
   });
 
   frontend.use(
@@ -29,7 +38,11 @@ export default function createServer(rootPath: string): void {
     express.static(path.join(rootPath, 'build', 'assets')),
   );
 
-  frontend.get('*', async (req, res) => {
+  frontend.use('*', async (req, res) => {
     res.sendFile(path.join(rootPath, 'build', 'index.html'));
+  });
+
+  frontend.use('/developers', async (req, res) => {
+    res.sendFile(path.join(rootPath, 'build', 'dev.html'));
   });
 }
